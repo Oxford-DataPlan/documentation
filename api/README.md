@@ -6,41 +6,152 @@ This repository aims to serve as the documentation for using the ODP API. The sw
 
 #### Get the token
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"username": "", "password": ""}' "https://oxford-dp.com/wp-json/jwt-auth/v1/token"
+curl -X POST -H "Content-Type: application/json" -d '{
+      "username": "",
+      "password": ""
+}' "https://oxford-dp.com/wp-json/jwt-auth/v1/token"
 ```
 #### Expected Response
 ```
-{"token":"<token>","user_email":"user.name@example.com","user_nicename":"user-name-example-com","user_display_name":"User Name"}
+{
+    "token": "<token>",
+    "user_email": "user@example.com",
+    "user_nicename": "user_display_name",
+    "user_display_name": "User Name"
+}
 ```
 #### Call the api endpoint
+##### /indexes endpoint (daily indices)
 ```
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{
       "type": "daily",
-      "duration_start": "2020-06-08",
+      "duration_start": "2023-06-13",
       "duration_end": "2023-06-15",
       "company": "Meta"
 
 }' "https://api.uat.oxford-dp.link/api/indexes"
 ```
-#### Expected Response
+##### Expected response daily indices
+```
+{
+    "rows": [
+        {
+            "company_name": "Meta",
+            "country": "",
+            "date": "2023-06-13",
+            "metric": "Ad Revenue",
+            "value": 371126477.0
+        },
+        {
+            "company_name": "Meta",
+            "country": "",
+            "date": "2023-06-14",
+            "metric": "Ad Revenue",
+            "value": 404982641.0
+        },
+        {
+            "company_name": "Meta",
+            "country": "",
+            "date": "2023-06-15",
+            "metric": "Ad Revenue",
+            "value": 380078023.0
+        }
+    ]
+}
+```
+##### /monthly_indices endpoint (monthly indices)
+```
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{
+      "type": "daily",
+      "duration_start": "2023-01-01",
+      "duration_end": "2023-03-31",
+      "company": "MFE"
+
+}' "https://api.uat.oxford-dp.link/api/monthly_indices"
+```
+##### Expected response monthly indices
 ```
 {
   "rows": [
     {
-      "company_name": "company",
-      "country": "country",
-      "date": "2023-06-21",
-      "metric": "metric1",
-      "value": 123.456
+      "start_date": "2023-01-01",
+      "end_date": "2023-01-31",
+      "publication_date": "2024-02-07",
+      "company_name": "MFE",
+      "country": "IT",
+      "metric": "Advertising Revenue",
+      "value": 109767434.65438858,
+      "category": "estimate"
     },
     {
-      "company_name": "company",
-      "country": "country",
-      "date": "2023-06-20",
-      "metric": "metric2",
-      "value": 789.123
+      "start_date": "2023-02-01",
+      "end_date": "2023-02-28",
+      "publication_date": "2024-02-07",
+      "company_name": "MFE",
+      "country": "IT",
+      "metric": "Advertising Revenue",
+      "value": 108220551.8988177,
+      "category": "estimate"
+    },
+    {
+      "start_date": "2023-03-01",
+      "end_date": "2023-03-31",
+      "publication_date": "2024-02-07",
+      "company_name": "MFE",
+      "country": "IT",
+      "metric": "Advertising Revenue",
+      "value": 171890675.42930394,
+      "category": "estimate"
     }
   ]
+}
+```
+##### /outlook endpoint (outlook)
+```
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{
+      "type": "daily",
+      "duration_start": "2023-06-13",
+      "duration_end": "2023-06-15",
+      "company": "Fluidra"
+
+}' "https://api.uat.oxford-dp.link/api/outlook"
+```
+
+##### Expected response outlook
+```
+{
+    "rows": [
+        {
+            "company_name": "Fluidra",
+            "country": "US",
+            "date": "2023-06-13",
+            "freq": "M",
+            "metric": "Development Trends",
+            "period": 6,
+            "value": 4.0,
+            "year": 2023
+        },
+        {
+            "company_name": "Fluidra",
+            "country": "US",
+            "date": "2023-06-14",
+            "freq": "M",
+            "metric": "Development Trends",
+            "period": 6,
+            "value": 4.0,
+            "year": 2023
+        },
+        {
+            "company_name": "Fluidra",
+            "country": "US",
+            "date": "2023-06-15",
+            "freq": "M",
+            "metric": "Development Trends",
+            "period": 6,
+            "value": 4.0,
+            "year": 2023
+        }
+    ]
 }
 ```
 
@@ -57,21 +168,58 @@ export ODP_WP_PASSWORD=""
 #### Installing libraries
 ```
 pip install -r requirements.txt
-pyjwt
-requests
+```
+OR
 
+```
+pip install pyjwt requests
 ```
 
 ## Test Cases
 #### Example Test Case
+##### /indexes endpoint
 ```
 "TEST_CASE1": {
-    "endpoint": "/indexes",
+      "endpoint": "/indexes",
+      "payload": {
+          "type": "daily",
+          "duration_start": "2024-06-08",
+          "duration_end": "2024-06-15",
+          "company": "Meta"
+      },
+      "headers": {
+          "accept": "application/json",
+          "Content-Type": "application/json"
+      }
+}
+```
+
+##### /monthly_indices endpoint
+```
+"TEST_CASE2": {
+    "endpoint": "/monthly_indexes",
+    "payload": {
+        "type": "monthly",
+        "duration_start": "2023-01-01",
+        "duration_end": "2023-03-31",
+        "company": "MFE"
+    },
+    "headers": {
+        "accept": "application/json",
+        "Content-Type": "application/json"
+    }
+}
+```
+
+##### /outlook endpoint
+```
+"TEST_CASE3": {
+    "endpoint": "/outlook",
     "payload": {
         "type": "daily",
-        "duration_start": "2023-06-08",
+        "duration_start": "2023-06-13",
         "duration_end": "2023-06-15",
-        "company": "Xing"
+        "company": "Fluidra"
     },
     "headers": {
         "accept": "application/json",
@@ -80,7 +228,8 @@ requests
 }
 ```
 ## Adding Test Cases
-Simply add a new entry in the `TEST_CASES` dictionary in `api_test_cases.py`, and update the `type`, `duration_start`, `duration_end` and `company` accordingly
+Either add companies in the `company_names` variable and select the test cases for the desired endpoint by choosing among `TEST_CASES_DAILY_INDICES`, `TEST_CASES_MONTHLY_INDICES` and `TEST_CASES_OUTLOOK`
+or create your own test cases using the respective templates.
 
 ## Running the API
 Finally, test the API using the following command
@@ -137,25 +286,4 @@ status_code: 400
 }
 ```
 
-If both username and password are correct, and the parameters are in the expected format, the response should be the requested json
-```
-status_code: 200
-{
-  "rows": [
-    {
-      "company_name": "company",
-      "country": "country",
-      "date": "2023-06-21",
-      "metric": "metric1",
-      "value": 123.456
-    },
-    {
-      "company_name": "company",
-      "country": "country",
-      "date": "2023-06-20",
-      "metric": "metric2",
-      "value": 789.123
-    }
-  ]
-}
-```
+If both username and password are correct, and the parameters are in the expected format, the response should be the requested json for [daily indices](#expected-response-daily-indices), [monthly indices](#expected-response-monthly-indices) and [outlook](#expected-response-outlook)
