@@ -59,7 +59,7 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <toke
     ]
 }
 ```
-##### /monthly_indices endpoint (monthly indices)
+##### /monthly_indexes endpoint (monthly indices)
 ```
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{
       "type": "daily",
@@ -67,9 +67,9 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <toke
       "duration_end": "2023-03-31",
       "company": "MFE"
 
-}' "https://api.uat.oxford-dp.link/api/monthly_indices"
+}' "https://api.uat.oxford-dp.link/api/monthly_indexes"
 ```
-##### Expected response monthly indices
+##### Expected response monthly indexes
 ```
 {
   "rows": [
